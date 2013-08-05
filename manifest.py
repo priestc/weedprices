@@ -5,7 +5,7 @@ from giotto.views import BasicView, jinja_template
 from models import show_listings, CrawlResult
 
 manifest = Manifest({
-    'listings': Program(
+    '': Program(
         model=[show_listings],
         view=BasicView(
         	html=jinja_template("show_listings.html")

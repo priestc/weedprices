@@ -1,0 +1,64 @@
+<DOCTYLE html>
+<html>
+	<head>
+		<script type="text/javascript" src="/static/jquery-latest.js"></script> 
+		<script type="text/javascript" src="/static/jquery.tablesorter.js"></script>
+		<link rel="stylesheet" href="/static/blue/style.css" type="text/css" media="print, projection, screen" />
+		<style>
+			.price_btc {color:red}
+			.price_usd {color: green}
+			.quantity {color: blue}
+			.title {font-weight: bold}
+			td.title img {padding-right: 10px; vertical-align: top}
+		</style>
+		<script>
+			$(document).ready(function() { 
+		        $("#myTable").tablesorter(); 
+		    }); 
+		</script>
+	</head>
+	<body>
+		<p>
+			Silkroad listing prices, sortable by price per unit.
+			Due to the silkroad requiring a capcha to login, these listings are updated manually.
+			This page was last updated at: <strong>{{ data.last_updated }}</strong>
+		</p>
+
+		<p>
+			The bitcin price at the time of this page's creation is: <strong>{{ data.current_bitcoin_price }}</strong> BTC/USD.
+		</p>
+
+		<table border=1 id="myTable" class="tablesorter">
+			<thead>
+				<tr>
+					<th>Price (BTC)</th>
+					<th>Price (USD)</th>
+					<th>Quantity (oz)</th>
+					<th>Listing Title</th>
+					<th>Seller</th>
+					<th>Unit Price (USD/oz)</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for listing in data['items'] %}
+				<tr>
+					<td class="price_btc">฿{{ listing.price }}</td>
+					<td class="price_usd">${{ "%.2f"|format(listing.price * data.current_bitcoin_price) }}</td>
+					{% if listing.quantity %}
+						<td class="quantity">{{ "%.2f"|format(listing.quantity) }}</td>
+					{% else %}
+						<td class="unit_price">??</td>
+					{% endif %}
+					<td class="title"><img height="135" width="180" src="{{ listing['thumb'] }}"><a href="{{ listing.url }}">{{ listing.title }}</a></td>
+					<td class="seller">{{ listing.seller }}</td>
+					{% if listing.quantity %}
+						<td class="unit_price">${{ "%.2f"|format((listing['price'] * data['current_bitcoin_price']) / listing['quantity']) }}</td>
+					{% else %}
+						<td class="unit_price">??</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	<body>
+</html>

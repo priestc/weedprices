@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 def strip_all_but_numbers(num):
     return re.compile(r'[^\d.]+').sub('', num)
 
-def get_page(page=1, download=False):
+def get_page(drug='weed', page=1, download=False):
     if download:
         # XXX: This needs to be done later
         # crawling over tor is a pain.
@@ -16,14 +16,14 @@ def get_page(page=1, download=False):
         response = requests.get(url, cookies={})
         return response.content
     else:
-        return open('data/page%s.html' % page).read()
+        return open('%s_data/page%s.html' % (drug, page)).read()
 
-def get_listings(page):
+def get_listings(drug, page):
     """
     Given a large string of HTML code from a page on silkroad's site,
     return a json structore representing the listings.
     """
-    html = get_page(page)
+    html = get_page(drug=drug, page=page)
     soup = BeautifulSoup(html)
 
     container = soup.findAll("div", id="cat_item")
@@ -58,22 +58,18 @@ def guess_quantity(title):
     """
     In comes a title of a silkroad listing.
     Returned is a best guess on the quantity of that listing.
-    Works by doing a fuzzy search. All values are in ounces.
+    Works by doing a fuzzy search. All return values are in ounces.
     """
     title = title.lower()
     regex = "(half|quarter|\d/\d|\d+\.*\d+|\d+)[\s-]*(%s|%s)"
-    grams = re.search(regex % ('g', 'grams'), title)
+    grams = re.search(regex % ('g|gr', 'grams'), title)
     if grams:
         numeric = grams.groups()[0]
-        #print "found grams", numeric, "**", title
-        try:
-            return float(numeric) / 28.35
-        except:
-            import debug
+        return float(numeric) / 28.35
+    
     ounces = re.search(regex % ('oz', 'ounce'), title)
     if ounces:
         numeric = ounces.groups()[0] # just the numeric value
-        #print "found ounces", value
         if numeric == 'half':
             return 0.5
         if numeric == 'quarter':
@@ -86,7 +82,6 @@ def guess_quantity(title):
     pounds = re.search(regex % ('lb|lbs', 'pound'), title)
     if pounds:
         numeric = pounds.groups()[0] # just the numeric value
-        #print "found pounds", value
         if numeric == 'half':
             return 8
         if numeric == 'quarter':
@@ -107,10 +102,8 @@ def guess_quantity(title):
     if "pound" in title:
         return 16
     if "qp" in title:
-        #print "found qp"
         return 4
     if "hp" in title:
-        #print "found hp"
         return 8
     if "oz" in title:
         return 1

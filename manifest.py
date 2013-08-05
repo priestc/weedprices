@@ -14,7 +14,6 @@ manifest = Manifest({
     'crawl': Program(
     	controllers=['cmd'],
     	model=[CrawlResult.do_crawl],
-    	view=BasicView,
     ),
     'static': StaticServe('/static'),
     'mgt': management_manifest,

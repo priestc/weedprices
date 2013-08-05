@@ -9,10 +9,10 @@ from sqlalchemy import Column, String, DateTime, Float
 
 Base = get_config("Base")
 
-def all_listings():
+def all_listings(drug):
     data = []
     for i in range(1, 16):
-        data = data + get_listings(i)
+        data = data + get_listings(drug=drug, page=i)
     return data
 
 def show_listings():
@@ -28,13 +28,15 @@ class CrawlResult(Base):
 	json = Column(String)
 	bitcoin_to_usd = Column(Float)
 	created = Column(DateTime, primary_key=True)
+	drug = Column(String)
 
 	@classmethod
-	def do_crawl(cls):
+	def do_crawl(cls, drug):
 		m = cls(
-			json=json.dumps(all_listings()),
+			json=json.dumps(all_listings(drug=drug)),
 			bitcoin_to_usd=requests.get("http://api.bitcoinaverage.com/ticker/USD").json()['last'],
-			created=datetime.datetime.now()
+			created=datetime.datetime.now(),
+			drug=drug
 		)
 		session = get_config("db_session")
 		session.add(m)

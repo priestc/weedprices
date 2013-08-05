@@ -16,7 +16,7 @@ def get_page(page=1, download=False):
         response = requests.get(url, cookies={})
         return response.content
     else:
-        return open('page%s.html' % page).read()
+        return open('data/page%s.html' % page).read()
 
 def get_listings(page):
     """

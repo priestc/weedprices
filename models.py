@@ -15,10 +15,11 @@ def all_listings(drug):
         data = data + get_listings(drug=drug, page=i)
     return data
 
-def show_listings():
-	latest = CrawlResult.get_latest()
+def show_listings(drug):
+	latest = CrawlResult.get_latest(drug=drug)
 	items = json.loads(latest.json)
 	return {
+		'drug': drug,
 		'items': items,
 		'current_bitcoin_price': latest.bitcoin_to_usd,
 		'last_updated': latest.created
@@ -43,6 +44,6 @@ class CrawlResult(Base):
 		session.commit()
 
 	@classmethod
-	def get_latest(cls):
+	def get_latest(cls, drug):
 		session = get_config("db_session")
-		return session.query(cls).order_by("-created")[0]
+		return session.query(cls).filter_by(drug=drug).order_by("-created")[0]

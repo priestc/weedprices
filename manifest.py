@@ -6,14 +6,19 @@ from models import show_listings, CrawlResult
 
 manifest = Manifest({
     '': Program(
+        view=BasicView(
+            html=jinja_template('landing.html')
+        )
+    ),
+    'listings': Program(
         model=[show_listings],
         view=BasicView(
-        	html=jinja_template("show_listings.html")
+            html=jinja_template("show_listings.html")
         )
     ),
     'crawl': Program(
-    	controllers=['cmd'],
-    	model=[CrawlResult.do_crawl],
+        controllers=['cmd'],
+        model=[CrawlResult.do_crawl],
     ),
     'static': StaticServe('/static'),
     'mgt': management_manifest,

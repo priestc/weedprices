@@ -19,6 +19,8 @@
 {% endblock %}
 
 {% block content %}
+	<h1>{{ data.drug }}</h1>
+	<h2>Last updated: {{ data.last_updated.strftime('%B %d, %Y') }}</h2>
 	<table border=1 id="myTable" class="tablesorter">
 		<thead>
 			<tr>

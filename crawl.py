@@ -21,7 +21,7 @@ def get_page(drug='weed', page=1, download=False):
 def get_listings(drug, page):
     """
     Given a large string of HTML code from a page on silkroad's site,
-    return a json structore representing the listings.
+    return a json structure representing the listings.
     """
     html = get_page(drug=drug, page=page)
     soup = BeautifulSoup(html)
@@ -35,7 +35,11 @@ def get_listings(drug, page):
         if "lottery" in title.lower():
             # ignore lottery listings because they don't count
             continue
-        quantity = guess_quantity(title)
+        try:
+            quantity = guess_quantity(title)
+        except:
+            print "failed:", title 
+        
         if not quantity:
             continue
 
@@ -44,6 +48,7 @@ def get_listings(drug, page):
         seller = item.find("a", href=re.compile("/silkroad/user/")).text
         thumb = item.find("img", src=re.compile("^data:"))
         thumb = (thumb and thumb.attrs['src']) or ""
+        
         items.append({
             'title': title,
             "seller": seller,
@@ -62,9 +67,16 @@ def guess_quantity(title):
     """
     title = title.lower()
     regex = "(half|quarter|\d/\d|\d+\.*\d+|\d+)[\s-]*(%s|%s)"
-    grams = re.search(regex % ('g|gr', 'grams'), title)
+    grams = re.search(regex % ('g|gr', 'gram'), title)
     if grams:
         numeric = grams.groups()[0]
+        if numeric == 'half':
+            return 0.5 / 28.35
+        if numeric == 'quarter':
+            return 0.25 / 28.35
+        if '/' in numeric:
+            num, denom = numeric.split('/')
+            return float(num) / float(strip_all_but_numbers(denom))
         return float(numeric) / 28.35
     
     ounces = re.search(regex % ('oz', 'ounce'), title)

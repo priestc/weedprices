@@ -27,15 +27,30 @@ class CrawlResult(Base):
 
 	@classmethod
 	def do_crawl(cls, drug, total_pages):
+		#import debug
+		try:
+			parsed = open("%s_data/parsed.json" % drug).read()
+		except IOError:
+			parsed = json.dumps(get_all_listings(drug=drug, total_pages=total_pages))
+			with open("%s_data/parsed.json" % drug, 'w') as f:
+				f.write(parsed)
+
 		m = cls(
-			json=json.dumps(get_all_listings(drug=drug, total_pages=total_pages)),
+			json=parsed,
 			bitcoin_to_usd=requests.get("http://api.bitcoinaverage.com/ticker/USD").json()['last'],
 			created=datetime.datetime.now(),
 			drug=drug
 		)
-		session = get_config("db_session")
-		session.add(m)
-		session.commit()
+
+		try:
+			session = get_config("db_session")
+			session.add(m)
+			session.commit()
+		except Exception as exc:
+			print "wut"
+			import debug
+			print "ff"
+		
 
 	@classmethod
 	def get_latest(cls, drug):

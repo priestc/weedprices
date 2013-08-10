@@ -19,7 +19,7 @@ def get_listings(drug, page):
     """
     file_number = (page-1) * 25
     html = open('%s_data/%s.html' % (drug, file_number)).read()
-    soup = BeautifulSoup(html)
+    soup = BeautifulSoup(html, "lxml")
 
     container = soup.findAll("div", id="cat_item")
     

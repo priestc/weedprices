@@ -50,7 +50,7 @@ def get_listings(drug, page):
         items.append({
             'title': title,
             "seller": seller,
-            "price": float(price),
+            "price": float(price.replace(',', '')),
             "quantity": quantity,
             "url": url,
             "country": silkroad_country_to_iso(country),
@@ -97,6 +97,12 @@ def silkroad_country_to_iso(sr_country):
         return "FI"
     if sr_country == 'India':
         return "IN"
+    if sr_country == 'Belgium':
+        return "BE"
+    if sr_country == 'Thailand':
+        return "TH"
+    if sr_country == 'Ukraine':
+        return "UA"
 
     raise Exception("New country: %s" % sr_country)
     

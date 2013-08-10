@@ -24,7 +24,6 @@ class CrawlResult(Base):
 	bitcoin_to_usd = Column(Float)
 	created = Column(DateTime, primary_key=True)
 	drug = Column(String)
-	country = Column(String(2))
 
 	@classmethod
 	def do_crawl(cls, drug, total_pages):

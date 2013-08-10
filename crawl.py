@@ -76,7 +76,7 @@ def silkroad_country_to_iso(sr_country):
     if sr_country == 'Sweden':
         return "SE"
     if sr_country == 'United Kingdom':
-        return "UK"
+        return "GB"
     if sr_country == 'undeclared':
         return ""
     if sr_country == 'France':
@@ -90,7 +90,7 @@ def silkroad_country_to_iso(sr_country):
     if sr_country == 'Australia':
         return "AU"
     if sr_country == 'Spain':
-        return "SP"
+        return "ES"
     if sr_country == 'Denmark':
         return "DK"
     if sr_country == 'Finland':

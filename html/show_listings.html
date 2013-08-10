@@ -20,7 +20,8 @@
 
 {% block content %}
 	<h1>{{ data.drug }}</h1>
-	<h2>Last updated: {{ data.last_updated.strftime('%B %d, %Y') }}</h2>
+	Last updated: <strong>{{ data.last_updated.strftime('%B %d, %Y') }}</strong>
+	when the bitcoin price was <strong>{{ data.bitcoin_price }}</strong> BTC/USD.
 	<table border=1 id="myTable" class="tablesorter">
 		<thead>
 			<tr>
@@ -36,7 +37,7 @@
 		{% for listing in data['items'] %}
 			<tr>
 				<td class="price_btc">฿{{ listing.price }}</td>
-				<td class="price_usd">${{ "%.2f"|format(listing.price * data.current_bitcoin_price) }}</td>
+				<td class="price_usd">${{ "%.2f"|format(listing.price * data.bitcoin_price) }}</td>
 				{% if listing.quantity %}
 					<td class="quantity">{{ "%.2f"|format(listing.quantity) }}</td>
 				{% else %}
@@ -45,7 +46,7 @@
 				<td class="title"><img height="135" width="180" src="{{ listing['thumb'] }}"><a href="{{ listing.url }}">{{ listing.title }}</a></td>
 				<td class="seller">{{ listing.seller }}<br>{% if listing.country %}<img border="0" src="/static/flags/flags_iso/48/{{ listing.country.lower() }}.png">{% endif %}</td>
 				{% if listing.quantity %}
-					<td class="unit_price">${{ "%.2f"|format((listing['price'] * data['current_bitcoin_price']) / listing['quantity']) }}</td>
+					<td class="unit_price">${{ "%.2f"|format((listing['price'] * data.bitcoin_price) / listing['quantity']) }}</td>
 				{% else %}
 					<td class="unit_price">??</td>
 				{% endif %}

@@ -20,7 +20,6 @@ def get_listings(drug, page):
     file_number = (page-1) * 25
     html = open('%s_data/%s.html' % (drug, file_number)).read()
     soup = BeautifulSoup(html)
-    print "found page: %s (%s.html)" % (page, file_number)
 
     container = soup.findAll("div", id="cat_item")
     
@@ -56,6 +55,8 @@ def get_listings(drug, page):
             "country": silkroad_country_to_iso(country),
             "thumb": thumb,
         })
+
+    print "parsed page: %s (%s.html)" % (page, file_number)
     return items
 
 def silkroad_country_to_iso(sr_country):

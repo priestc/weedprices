@@ -15,7 +15,7 @@ def show_listings(drug):
 	return {
 		'drug': drug,
 		'items': items,
-		'current_bitcoin_price': latest.bitcoin_to_usd,
+		'bitcoin_price': latest.bitcoin_to_usd,
 		'last_updated': latest.created
 	}
 

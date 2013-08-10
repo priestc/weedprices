@@ -6,25 +6,21 @@ from bs4 import BeautifulSoup
 def strip_all_but_numbers(num):
     return re.compile(r'[^\d.]+').sub('', num)
 
-def get_page(drug='weed', page=1, download=False):
-    if download:
-        # XXX: This needs to be done later
-        # crawling over tor is a pain.
-        # we'll use manual crawlinf for now
-        url = "http://silkroadvb5piz3r.onion.to/"
-        cookies = dict(cookies_are='working')
-        response = requests.get(url, cookies={})
-        return response.content
-    else:
-        return open('%s_data/page%s.html' % (drug, page)).read()
+def get_all_listings(drug, total_pages):
+    data = []
+    for i in range(1, int(total_pages) + 1):
+        data = data + get_listings(drug=drug, page=i)
+    return data
 
 def get_listings(drug, page):
     """
     Given a large string of HTML code from a page on silkroad's site,
     return a json structure representing the listings.
     """
-    html = get_page(drug=drug, page=page)
+    file_number = (page-1) * 25
+    html = open('%s_data/%s.html' % (drug, file_number)).read()
     soup = BeautifulSoup(html)
+    print "found page: %s (%s.html)" % (page, file_number)
 
     container = soup.findAll("div", id="cat_item")
     
@@ -46,18 +42,68 @@ def get_listings(drug, page):
         url = title_elem.attrs['href']
         price = item.find(class_="price_big").text[1:] # remove bitcoin glyph
         seller = item.find("a", href=re.compile("/silkroad/user/")).text
-        thumb = item.find("img", src=re.compile("^data:"))
-        thumb = (thumb and thumb.attrs['src']) or ""
-        
+        thumb_e = item.find("img", src=re.compile("^data:"))
+        thumb = (thumb_e and thumb_e.attrs['src']) or ""
+        ships_from = [x for x in item.find(id="cat_item_description").children][6]
+        country = ships_from[12:]
+
         items.append({
             'title': title,
             "seller": seller,
             "price": float(price),
             "quantity": quantity,
             "url": url,
+            "country": silkroad_country_to_iso(country),
             "thumb": thumb,
         })
     return items
+
+def silkroad_country_to_iso(sr_country):
+    if sr_country == 'Saipan':
+        return "MP"
+    if sr_country == 'United States of America':
+        return "US"
+    if sr_country == 'Canada':
+        return "CA"
+    if sr_country == 'Germany':
+        return "DE"
+    if sr_country == 'South Africa':
+        return "ZA"
+    if sr_country == 'Germany':
+        return "DE"
+    if sr_country == 'Netherlands':
+        return "NL"
+    if sr_country == 'Sweden':
+        return "SE"
+    if sr_country == 'United Kingdom':
+        return "UK"
+    if sr_country == 'undeclared':
+        return ""
+    if sr_country == 'France':
+        return "FR"
+    if sr_country == 'Czech Republic':
+        return "CZ"
+    if sr_country == 'Poland':
+        return "PL"
+    if sr_country == 'Italy':
+        return "IT"
+    if sr_country == 'Australia':
+        return "AU"
+    if sr_country == 'Spain':
+        return "SP"
+    if sr_country == 'Denmark':
+        return "DK"
+    if sr_country == 'Finland':
+        return "FI"
+    if sr_country == 'India':
+        return "IN"
+
+    raise Exception("New country: %s" % sr_country)
+    
+
+
+
+
 
 def guess_quantity(title):
     """

@@ -4,16 +4,10 @@ import json
 
 from giotto import get_config
 
-from crawl import get_listings
+from crawl import get_all_listings
 from sqlalchemy import Column, String, DateTime, Float
 
 Base = get_config("Base")
-
-def all_listings(drug, total_pages):
-    data = []
-    for i in range(1, int(total_pages)):
-        data = data + get_listings(drug=drug, page=i)
-    return data
 
 def show_listings(drug):
 	latest = CrawlResult.get_latest(drug=drug)
@@ -30,11 +24,12 @@ class CrawlResult(Base):
 	bitcoin_to_usd = Column(Float)
 	created = Column(DateTime, primary_key=True)
 	drug = Column(String)
+	country = Column(String(2))
 
 	@classmethod
 	def do_crawl(cls, drug, total_pages):
 		m = cls(
-			json=json.dumps(all_listings(drug=drug, total_pages=total_pages)),
+			json=json.dumps(get_all_listings(drug=drug, total_pages=total_pages)),
 			bitcoin_to_usd=requests.get("http://api.bitcoinaverage.com/ticker/USD").json()['last'],
 			created=datetime.datetime.now(),
 			drug=drug

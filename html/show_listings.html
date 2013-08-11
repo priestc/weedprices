@@ -13,7 +13,7 @@
 	</style>
 	<script>
 		$(document).ready(function() { 
-	        $("#myTable").tablesorter(); 
+	        $("#myTable").tablesorter();
 	    }); 
 	</script>
 {% endblock %}
@@ -21,21 +21,24 @@
 {% block content %}
 	<h1>{{ data.drug }}</h1>
 	Last updated: <strong>{{ data.last_updated.strftime('%B %d, %Y') }}</strong>
-	when the bitcoin price was <strong>{{ data.bitcoin_price }}</strong> BTC/USD.
+	when the bitcoin price was <strong>${{ data.bitcoin_price }}</strong>/BTC.
 	<table border=1 id="myTable" class="tablesorter">
 		<thead>
 			<tr>
+				<th>Sales Rank</td>
 				<th>Price (BTC)</th>
 				<th>Price (USD)</th>
 				<th>Quantity (oz)</th>
 				<th>Listing Title</th>
 				<th>Seller</th>
+				<th>Country</th>
 				<th>Unit Price (USD/oz)</th>
 			</tr>
 		</thead>
 		<tbody>
-		{% for listing in data['items'] %}
+		{% for rank, listing in data.enumerate(data['items'], 1) %}
 			<tr>
+				<td class="sales_rank">{{ rank }}</td>
 				<td class="price_btc">฿{{ listing.price }}</td>
 				<td class="price_usd">${{ "%.2f"|format(listing.price * data.bitcoin_price) }}</td>
 				{% if listing.quantity %}
@@ -44,7 +47,10 @@
 					<td class="unit_price">??</td>
 				{% endif %}
 				<td class="title"><img height="135" width="180" src="/static/images/{{ listing.thumb }}.jpg"><a href="{{ listing.url }}">{{ listing.title }}</a></td>
-				<td class="seller">{{ listing.seller }}<br>{% if listing.country %}<img border="0" src="/static/flags/flags_iso/48/{{ listing.country.lower() }}.png">{% endif %}</td>
+				<td class="seller">{{ listing.seller }}</td>
+				<td class="country">
+					<span style="display: none">{{ listing.country }}</span>
+					<img border="0" src="/static/flags/flags_iso/48/{{ listing.country.lower() }}.png"></td>
 				{% if listing.quantity %}
 					<td class="unit_price">${{ "%.2f"|format((listing['price'] * data.bitcoin_price) / listing['quantity']) }}</td>
 				{% else %}

@@ -16,7 +16,8 @@ def show_listings(drug):
         'drug': drug,
         'items': items,
         'bitcoin_price': latest.bitcoin_to_usd,
-        'last_updated': latest.created
+        'last_updated': latest.created,
+        'enumerate': enumerate,
     }
 
 class CrawlResult(Base):

@@ -21,7 +21,9 @@
 {% block content %}
 	<h1>{{ data.drug }}</h1>
 	Last updated: <strong>{{ data.last_updated.strftime('%B %d, %Y') }}</strong>
-	when the bitcoin price was <strong>${{ data.bitcoin_price }}</strong>/BTC.
+	when the bitcoin price was <strong>${{ data.bitcoin_price }}</strong>/BTC.<br>
+	<br>
+	<em><strong>Tip:</strong> Use shift+click to sort multiple rows.</em>
 	<table border=1 id="myTable" class="tablesorter">
 		<thead>
 			<tr>
@@ -46,11 +48,19 @@
 				{% else %}
 					<td class="unit_price">??</td>
 				{% endif %}
-				<td class="title"><img height="135" width="180" src="/static/images/{{ listing.thumb }}.jpg"><a href="{{ listing.url }}">{{ listing.title }}</a></td>
+				<td class="title">
+					<img height="135" width="180" src="/static/images/{{ listing.thumb }}.jpg"><a href="{{ listing.url }}">{{ listing.title }}</a>
+				</td>
 				<td class="seller">{{ listing.seller }}</td>
 				<td class="country">
+					{% if listing.country %}
 					<span style="display: none">{{ listing.country }}</span>
-					<img border="0" src="/static/flags/flags_iso/48/{{ listing.country.lower() }}.png"></td>
+					<img border="0" src="/static/flags/flags_iso/48/{{ listing.country.lower() }}.png">
+					{% else %}
+					<span style="display: none">ZZ</span>
+					<img border="0" src="/static/flags/flags_iso/48/_United%20Nations.png">
+					{% endif %}
+				</td>
 				{% if listing.quantity %}
 					<td class="unit_price">${{ "%.2f"|format((listing['price'] * data.bitcoin_price) / listing['quantity']) }}</td>
 				{% else %}

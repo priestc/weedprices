@@ -42,14 +42,10 @@ class CrawlResult(Base):
 			drug=drug
 		)
 
-		try:
-			session = get_config("db_session")
-			session.add(m)
-			session.commit()
-		except Exception as exc:
-			print "wut"
-			import debug
-			print "ff"
+		session = get_config("db_session")
+		session.add(m)
+		session.commit()
+
 		
 
 	@classmethod

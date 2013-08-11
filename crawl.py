@@ -1,3 +1,4 @@
+import hashlib
 import re
 import requests
 
@@ -53,11 +54,26 @@ def get_listings(drug, page):
             "quantity": quantity,
             "url": url,
             "country": silkroad_country_to_iso(country),
-            "thumb": thumb,
+            "thumb": uri_to_file(thumb),
         })
 
     print "parsed page: %s (%s.html)" % (page, file_number)
     return items
+
+def uri_to_file(uri):
+    """
+    Convert a data URI to an image file. Save to disk, use the 
+    md5 of the data as the filename.
+    """
+    if not uri:
+        return
+
+    header, data = uri.split(',')
+    md5_hash = hashlib.md5(data).hexdigest()
+    with open("static/images/%s.jpg" % md5_hash, 'wb') as f:
+        f.write(data.decode('base64'))
+    return md5_hash
+
 
 def silkroad_country_to_iso(sr_country):
     if sr_country == 'Saipan':

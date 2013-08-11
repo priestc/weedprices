@@ -43,7 +43,7 @@
 				{% else %}
 					<td class="unit_price">??</td>
 				{% endif %}
-				<td class="title"><img height="135" width="180" src="{{ listing['thumb'] }}"><a href="{{ listing.url }}">{{ listing.title }}</a></td>
+				<td class="title"><img height="135" width="180" src="/static/images/{{ listing.thumb }}.jpg"><a href="{{ listing.url }}">{{ listing.title }}</a></td>
 				<td class="seller">{{ listing.seller }}<br>{% if listing.country %}<img border="0" src="/static/flags/flags_iso/48/{{ listing.country.lower() }}.png">{% endif %}</td>
 				{% if listing.quantity %}
 					<td class="unit_price">${{ "%.2f"|format((listing['price'] * data.bitcoin_price) / listing['quantity']) }}</td>

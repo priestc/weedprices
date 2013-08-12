@@ -121,6 +121,8 @@ def silkroad_country_to_iso(sr_country):
         return "TH"
     if sr_country == 'Ukraine':
         return "UA"
+    if sr_country == 'Ghana':
+        return "GH"
 
     raise Exception("New country: %s" % sr_country)
     

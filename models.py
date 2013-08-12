@@ -51,6 +51,9 @@ class CrawlResult(Base):
     worldwide_avg_per_ounce = Column(Float)
     outliers_count = Column(Integer)
 
+    def __repr__(self):
+        return "<CrawlResult: %s>" % self.created
+
     @classmethod
     def do_crawl(cls, drug, total_pages):
         bitcoin_price = float(requests.get("http://api.bitcoinaverage.com/ticker/USD").json()['last'])
@@ -89,4 +92,4 @@ class CrawlResult(Base):
     @classmethod
     def get_latest(cls, drug):
         session = get_config("db_session")
-        return session.query(cls).filter_by(drug=drug).order_by("-created")[0]
+        return session.query(cls).filter_by(drug=drug).order_by(cls.created.desc())[0]

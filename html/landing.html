@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>What is this?</h2>
-<p>
-	Silkroad listings, sortable by price per unit, quantity, and a few other fields.
-	Due to the silkroad requiring a capcha to login, these listings are updated manually, usually once every few days.
-</p>
+<div id="canvas">
+    <h2>What is this?</h2>
+    <p>
+    	Silkroad listings, sortable by price per unit, quantity, and a few other fields.
+    	Due to the silkroad requiring a capcha to login, these listings are updated manually, usually once every few days.
+        Click one of the links at the very top of this page to see the listings for each drug.
+    </p>
 
-<h2>Current global drug average prices:</h2>
-<ul>
-{% for price in data %}
-    <li>{{ price.drug }}: <strong>${{ "%.2f"|format(price.price) }}</strong> per oz. as of {{ price.date.strftime('%B %d, %Y') }}</li>
-{% endfor %}
-</ul>
-
+    <h2>Current global drug average prices:</h2>
+    <ul>
+    {% for price in data %}
+        <li>{{ price.drug }}: <strong>${{ "%.2f"|format(price.price) }}</strong> per oz. as of {{ price.date.strftime('%B %d, %Y') }}</li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock %}

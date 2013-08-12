@@ -2,12 +2,19 @@ from giotto.contrib.static.programs import StaticServe
 from giotto.programs import Program, Manifest
 from giotto.programs.management import management_manifest
 from giotto.views import BasicView, jinja_template
-from models import show_listings, CrawlResult
+from models import show_listings, CrawlResult, stats
 
 manifest = Manifest({
-    '': Program(
+    '': '/stats',
+    'stats': Program(
+        model=[stats],
         view=BasicView(
             html=jinja_template('landing.html')
+        )
+    ),
+    'api_docs': Program(
+        view=BasicView(
+            html=jinja_template('api.html')
         )
     ),
     'listings': Program(

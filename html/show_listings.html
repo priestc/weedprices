@@ -20,10 +20,14 @@
 
 {% block content %}
 	<h1>{{ data.drug }}</h1>
-	Last updated: <strong>{{ data.last_updated.strftime('%B %d, %Y') }}</strong>
-	when the bitcoin price was <strong>${{ data.bitcoin_price }}</strong>/BTC.<br>
+	Worldwide average price across all listings:
+		<strong>${{ "%.2f"|format(data.worldwide_avg_per_ounce) }} / oz</strong> (ignoring {{ data.outliers }} outlers)
 	<br>
-	<em><strong>Tip:</strong> Use shift+click to sort multiple rows.</em>
+	Last updated: <strong>{{ data.last_updated.strftime('%B %d, %Y') }}</strong>
+	when the bitcoin price was <strong>${{ data.bitcoin_price }}</strong>/BTC.
+	<br><br>
+	<em><strong>Tip:</strong> Use shift+click to sort by multiple rows.</em>
+
 	<table border=1 id="myTable" class="tablesorter">
 		<thead>
 			<tr>
@@ -38,7 +42,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		{% for rank, listing in data.enumerate(data['items'], 1) %}
+		{% for rank, listing in enumerate(data.listings, 1) %}
 			<tr>
 				<td class="sales_rank">{{ rank }}</td>
 				<td class="price_btc">฿{{ listing.price }}</td>
@@ -49,7 +53,12 @@
 					<td class="unit_price">??</td>
 				{% endif %}
 				<td class="title">
-					<img height="135" width="180" src="/static/images/{{ listing.thumb }}.jpg"><a href="{{ listing.url }}">{{ listing.title }}</a>
+					{% if listing.thumb %}
+						<img height="135" width="180" src="/static/images/{{ listing.thumb }}.jpg">
+					{% else %}
+						<img height="135" width="180" src="">
+					{% endif %}
+					<a href="{{ listing.url }}">{{ listing.title }}</a>
 				</td>
 				<td class="seller">{{ listing.seller }}</td>
 				<td class="country">
@@ -70,5 +79,4 @@
 		{% endfor %}
 		</tbody>
 	</table>
-	<a href="https://github.com/priestc/weedprices">Checkout the code on github</a>
 {% endblock %}

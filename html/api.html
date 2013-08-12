@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block extra_head %}
+<style>
+    th {
+        padding-right: 10px;
+        text-align: right;
+        vertical-align: top
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div id="canvas">
+    <h1>API</h1>
+    <p>
+    If you want to take advantage of the data that this applications puts out, feel free to use the weedprices API which is described below:
+    </p>
+    <h2>Overall Average price data for all drugs<h2>
+    <table>
+        <tr>
+            <th>URL:</th>
+            <td>weedprices.biz/stats.json</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>A JSON response with the average drug prices for all supported drugs.</td>
+        </tr>
+        <tr>
+            <th>Example:</th>
+            <td>
+    <pre>
+    [
+        {
+            date: "2013-08-11T13:45:55.394736",
+            price: 923.3677121590913,
+            drug: "mdma"
+        },
+        {
+            date: "2013-08-11T13:46:01.988340",
+            price: 318.6825281963037,
+            drug: "weed"
+        }
+    ]
+    </pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>All silkroad listings for a drug</h2>
+
+    <table>
+        <tr>
+            <th>URL:</th>
+            <td>http://weedprices.biz/listings.json?drug=[drug]</td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td>A JSON response with all listings for a given drug. Currently supported drugs: 'weed', 'mdma'
+                <ul>
+                    <li>
+                    <em>outliers</em> is the number of listings
+                    (from the 'listings' field) that were ignored when calculating the worldwide average price.
+                    Prices that are extremely high and exremely low are ignored when calculating overall percentages.
+                    </li>
+                    <li><em>thumb</em> is a string that can be constructed into a url that will point to an image associated with the listing.
+                        The url is in the form "http://weedprices.biz/static/images/[thumb].jpg"
+                    </li>
+                    <li><em>price</em> is in bitcoins.</li>
+                    <li><em>quantity</em> is in ounces.</li>
+                    <li><em>worldwide_avg_per_ounce</em> is the average price of drug per ounce in US dollars (despite the extra decimal digits).</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Example:</th>
+            <td>
+    <pre>
+    {
+        last_updated: "2013-08-11T16:04:21.341967",
+        listings: [
+            {
+                thumb: "3fab3d8b724954fe01cc8db7aba41807",
+                title: "10 grams of high quality MDMA",
+                url: "http://silkroadvb5piz3r.onion/silkroad/item/574132225a",
+                country: "DE",
+                price: 2.6343,
+                seller: "Sukey(97)",
+                quantity: 0.3527336860670194
+            },
+            {
+                thumb: "51be77eb53d1b03a82c1efd30eb6420c",
+                title: "SuperTrips 84% Pure MDMA (10g)",
+                url: "http://silkroadvb5piz3r.onion/silkroad/item/ad6fe0c724",
+                country: "US",
+                price: 5.1912,
+                seller: "UnderGroundSyndicate(98)",
+                quantity: 0.3527336860670194
+            },
+            ...
+        ],
+        drug: "MDMA",
+        worldwide_avg_per_ounce: 929.7389493729887,
+        bitcoin_price: 100.69,
+        outliers: 62
+    }
+
+    </pre>
+            </td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

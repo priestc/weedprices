@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 def strip_all_but_numbers(num):
     return re.compile(r'[^\d.]+').sub('', num)
 
-def get_all_listings(drug, total_pages):
+def parse_listings(drug, total_pages):
     data = []
     for i in range(1, int(total_pages) + 1):
         data = data + get_listings(drug=drug, page=i)
@@ -29,7 +29,7 @@ def get_listings(drug, page):
         title_elem = item.find(class_="h2")
         title = title_elem.text
         if "lottery" in title.lower():
-            # ignore lottery listings because they don't count
+            # ignore lottery listings because they mess up the average price
             continue
         try:
             quantity = guess_quantity(title)
@@ -41,6 +41,7 @@ def get_listings(drug, page):
 
         url = title_elem.attrs['href']
         price = item.find(class_="price_big").text[1:] # remove bitcoin glyph
+        price = float(price.replace(',', ''))
         seller = item.find("a", href=re.compile("/silkroad/user/")).text
         thumb_e = item.find("img", src=re.compile("^data:"))
         thumb = (thumb_e and thumb_e.attrs['src']) or ""
@@ -50,7 +51,7 @@ def get_listings(drug, page):
         items.append({
             'title': title,
             "seller": seller,
-            "price": float(price.replace(',', '')),
+            "price": price,
             "quantity": quantity,
             "url": url,
             "country": silkroad_country_to_iso(country),

@@ -2,12 +2,27 @@
 <html>
 	<head>
 		{% block extra_head %}{% endblock %}
+        <style>
+            body {
+                font-family: tahoma;
+                background: #FFDDFF;
+            }
+            #canvas {
+                max-width: 900px;
+                margin: 0 auto 0 auto;
+            }
+        </style>
 	</head>
 	<body>
 		<header>
+            <a href="/">Home</a> * 
 			<a href="/listings/mdma">MDMA</a> *
-			<a href="/listings/weed">Weed</a>
+			<a href="/listings/weed">Weed</a> *
+            <a href="/api_docs">API</a>
 		</header>
 		{% block content %}{% endblock %}
+        <footer>
+            <a href="https://github.com/priestc/weedprices">Checkout the code on github</a>
+        </footer>
 	</body>
 </html>

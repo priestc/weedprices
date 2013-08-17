@@ -36,3 +36,6 @@ nosetests.xml
 
 machine.py
 secret.py
+
+mdma_data/*.html
+weed_data/*.html

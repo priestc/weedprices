@@ -45,7 +45,7 @@ def get_listings(drug, page):
         seller = item.find("a", href=re.compile("/silkroad/user/")).text
         thumb_e = item.find("img", src=re.compile("^data:"))
         thumb = (thumb_e and thumb_e.attrs['src']) or ""
-        ships_from = [x for x in item.find(id="cat_item_description").children][6]
+        ships_from = [x for x in item.find(id="cat_item_description").children][8]
         country = ships_from[12:]
 
         items.append({
